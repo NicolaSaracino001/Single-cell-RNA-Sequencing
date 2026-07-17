@@ -105,7 +105,7 @@ plot3 <-  ggplot(meta_data, aes(x = nCount_RNA, y = percent.rbp)) +
   )
 
 # Display the three scatter plots together using patchwork
-plot1 + plo2 + plot3
+plot1 + plot2 + plot3
 
 # Filter the dataset based on QC thresholds 
 # Store the initial number of cells to calculate how many we discard 
@@ -114,7 +114,7 @@ cat("Initial number of cells:", initial_cells, "\n")
 
 # Subset the object based on thresholds 
 # (Note: keeping cells with features > 100, features < 5600, and MT % < 20)
-PanIslets_Nicola <- subset(PanIslets, subset = nFeature_RNA > 100 & nFeature_RNA < 5600 & percent.mt < 20)
+PanIslets_Nicola <- subset(PanIslets_Nicola, subset = nFeature_RNA > 100 & nFeature_RNA < 5600 & percent.mt < 20)
 PanIslets_Nicola
 
 # Calculate and print the discarded cells for the presentation
@@ -122,4 +122,51 @@ final_cells <- ncol(PanIslets_Nicola)
 discarded_cells <- initial_cells - final_cells
 
 cat("Final number of cells:",final_cells, "\n")
-cat("Number of dicarded cells:", disdarded_cells,"\n")
+cat("Number of dicarded cells:", discarded_cells,"\n")    
+
+############## NORMALIZATION #####################
+# Normalization 
+# 10x data are usually transformed into counts per 10,000 reads. 
+# The final expression estimate used for downstream analyses is the log of normalized count 
+PanIslets_Nicola <- NormalizeData(PanIslets_Nicola, normalization.method = "LogNormalize", scale.factor = 10000)
+PanIslets_Nicola@assays #25245 genes and 3060 cells
+
+# Calculate average gene expression across all cells and show the top 50 
+gene.expression <- apply(PanIslets_Nicola[["RNA"]]$data,1,mean)
+gene.expression <- sort(gene.expression, decreasing = TRUE)
+
+# Top 50 genes that have the highest mean expression across our cells
+head(gene.expression, n = 50)
+
+# Plot expression of a couple of highly expressed housekeeping genes
+VlnPlot(PanIslets, features = c("RPS2","GAPDH"))
+
+# Cell Cycle Scoring
+cc.genes.updated.2019
+PanIslets_Nicola <- CellCycleScoring(PanIslets_Nicola, 
+                                     s.features = cc.genes.updated.2019$s.genes, 
+                                     g2m.features = cc.genes.updated.2019$g2m.genes, 
+                                     set.ident = TRUE) 
+
+# Each cell is a point in a n-dimensional space, where n is the number of genes considered 
+# The closer two points, the more similar are the transcriptomes of the corresponding cells
+
+# Feature Selection (Highly Variable Genes)
+# The 'vst' method estimates the mean-variance relationship and chooses the 2000 most variable genes
+PanIslets_Nicola <- FindVariableFeatures(PanIslets_Nicola, selection.method = "vst", nfeatures = 2000)
+
+# Identify the 10 most highly variable genes
+top10 <- head(VariableFeatures(PanIslets_Nicola), 10)
+
+# Plot variable features with and without labels
+plot1 <- VariableFeaturePlot(PanIslets_Nicola)
+plot2 <- LabelPoints(plot = plot1, points = top10, repel = TRUE)
+MostVarGenes <- plot1 + plot2
+MostVarGenes + ggtitle("Top 10 Variable Features in PanIslets")
+
+# Scaling the Data
+# A linear transformation that is a standard pre-processing step prior to dimensional reduction techniques like PCA
+all.genes <- rownames(PanIslets_Nicola)
+PanIslets_Nicola <- ScaleData(PanIslets_Nicola, features = all.genes)
+
+# 
