@@ -139,7 +139,7 @@ gene.expression <- sort(gene.expression, decreasing = TRUE)
 head(gene.expression, n = 50)
 
 # Plot expression of a couple of highly expressed housekeeping genes
-VlnPlot(PanIslets, features = c("RPS2","GAPDH"))
+VlnPlot(PanIslets_Nicola, features = c("RPS2","GAPDH"))
 
 # Cell Cycle Scoring
 cc.genes.updated.2019
@@ -169,4 +169,23 @@ MostVarGenes + ggtitle("Top 10 Variable Features in PanIslets")
 all.genes <- rownames(PanIslets_Nicola)
 PanIslets_Nicola <- ScaleData(PanIslets_Nicola, features = all.genes)
 
-# 
+# top10 = REG1B, PRSS1, PLA2GQB, PNLIP, CPB1, CPA1
+
+################ DIMENSIONALITY REDUCTION #################
+# Run Principal Component Analysis (PCA)
+# We perform PCA on the scaled data using the 2000 highly variable features identified earlier
+PanIslets_Nicola <- RunPCA(PanIslets_Nicola, features = VariableFeatures(object = PanIslets_Nicola))
+
+# Examine and visualize PCA results
+# Print the top genes associated with the first 5 principal components
+print(PanIslets_Nicola[["pca"]], dims = 1:5, nfeatures = 5)
+
+# Visualize the top feature loading for the first two principal components
+VizDimLoadings(PanIslets_Nicola, dims = 1:2, reduction = "pca")
+
+# Plot the cells in the PCA space (PC1 vs PC2)
+DimPlot(PanIslets_Nicola, reduction = "pca")
+
+# Determine the 'dimensionality' of the dataset
+# The ElbowPlot helps to decide how many PCs to include in downstream analyses (like clustering)
+ElbowPlot(PanIslets_Nicola, ndims = 25)
