@@ -30,7 +30,7 @@ The analysis was structured into 7 distinct phases to ensure methodological rigo
 ### 1. Quality Control & Filtering
 Filtering out damaged cells and high-mitochondrial noise ensured clean transcriptomic profiles downstream.
 
-! [Distribution of nFeature_RNA, nCount_RNA, percent.mt] (/Volumes/Archivio_MacNicola/Progetti UNIVERSITA/Transcriptomics_project_SC/qc_violin_plots.png) 
+![Distribution of nFeature_RNA, nCount_RNA, percent.mt] (qc_violin_plots.png) 
 > - `qc_scatter_plots.png` (Correlation between UMI counts and mitochondrial percentage)
 
 ### 2. PCA & Dimension Selection
