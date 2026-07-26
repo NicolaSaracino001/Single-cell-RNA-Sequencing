@@ -222,3 +222,47 @@ plot_umap_15 + plot_umap_20
 # Check the exact number of clusters generated in each version
 cat("Number of clusters (15 PCs, Res 0.5):", lenght(levels(Idents(PanIslets_15PC))), "\n")
 cat("Number of clusters (20 PCs, Res 0.8):", lenght(levels(Idents(PanIslets_20PC))), "\n")
+
+#################### FINDING MARKER GENES ############################
+
+# Set the chosen model as our final object
+
+# Be sure we are working with the correct model (15PC)
+PanIslets_Final <- PanIslets_15PC
+Idents(PanIslets_Final) <- "RNA_snn_res.0.5"
+
+# Finding markers for all cluster 
+PanIslets.markers <- FindAllMarkers(PanIslets_Final,
+                                    only.pos = TRUE,      # only return upregulated genes
+                                    min.pct = 0.25,      # gene must be expressed in at least 25% of cells
+                                    logfc.threshold = 0.25)     # log fold change threshold
+
+# Extract top10 marker for each cluster for the annotation 
+top10_markers <- PanIslets.markers %>%
+  group_by(cluster) %>%
+  top_n(n = 10, wt = avg_log2FC)
+
+# Print the top10 cluster
+print(top10_markers, n = 30)
+
+################## PLOTTING ####################################
+# Heatmap top10 marker per cluster 
+DoHeatmap(PanIslets_Final, features = top10_markers$gene) + NoLegend()
+
+# DotPlot top10 marker
+DotPlot(PanIslets_Final, features = unique(top10_markers$gene)) + RotatedAxis()
+
+# FeaturePlots: verify the expression of pancreas classic markers
+# INS = Beta cells (Insulina)
+# GCG = Alpha cells (Glucagone)
+# SST = Delta cells (Somatostatina)
+# KRT19 = Ductal cells (Dotti)
+FeaturePlot(PanIslets_Final, features = c("INS", "GCG", "SST", "KRT19"))
+
+# Adding marker for cells stomali/endoteliali 
+# PDGFRB / COL1A1 = Stellate/Stromal cells
+# PECAM1 = Endothelial cells
+FeaturePlot(PanIslets_Final, features = c("INS", "GCG", "SST", "PPY", "KRT19", "PECAM1", "COL1A1"))
+
+# ViolinPlot key gene (e.g. Insulina)
+VlnPlot(PanIslets_Final, features = "INS")
