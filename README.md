@@ -31,20 +31,20 @@ The analysis was structured into 7 distinct phases to ensure methodological rigo
 Filtering out damaged cells and high-mitochondrial noise ensured clean transcriptomic profiles downstream.
 
 ![Distribution of nFeature_RNA, nCount_RNA, percent.mt](qc_violin_plots.png) 
-> - `qc_scatter_plots.png` (Correlation between UMI counts and mitochondrial percentage)
+![Correlation between UMI counts and mitochondrial percentage](qc_scatter_plots.png)
 
 ### 2. PCA & Dimension Selection
 The Elbow Plot indicated that the majority of biological variation is captured within the first 15 Principal Components.
-> - `elbow_plot.png` (Standard Deviation vs. PC numbers)
+![Standard Deviation vs. PC numbers](elbow_plot.png)
 
 ### 3. Clustering Benchmark
 Comparing two parameter settings demonstrated that **15 PCs with Resolution 0.5** provided a biologically sound balance compared to over-clustered alternatives:
-> - `umap_comparison_15vs20.png` (Side-by-side UMAP comparison)
+![Side-by-side UMAP comparison](umap_comparison_15vs20.png)
 
 ### 4. Marker Gene Expression & Profiling
 Cluster marker specificity was confirmed using multi-gene heatmaps and dot plots:
-> - `heatmap_top10_markers.png` (Top 10 differentially expressed genes per cluster)
-> - `dotplot_markers.png` (Expression intensity and percentage per cluster)
+![Top 10 differentially expressed genes per cluster](heatmap_top10_markers.png)
+![Expression intensity and percentage per cluster](dotplot_markers.png)
 
 ### 5. Biological Validation with Canonical Markers
 Canonical markers were evaluated across all clusters:
@@ -55,12 +55,12 @@ Canonical markers were evaluated across all clusters:
 - **`PECAM1`** (Endothelial cells)
 - **`COL1A1`** (Stellate / Stromal cells)
 
-> - `featureplot_canonical_markers.png` (UMAP expression overlay of canonical markers)
-> - `violinplot_ins.png` (INS expression across clusters)
+![UMAP expression overlay of canonical markers](featureplot_canonical_markers.png)
+![INS expression across clusters](violinplot_ins.png)
 
 ### 6. Final Cell Type Annotation
 The final UMAP map delineates all major endocrinal and stromal cell populations present in the tissue sample:
-> - `final_annotated_umap.png` (Final annotated UMAP cluster map)
+![Final annotated UMAP cluster map](final_annotated_umap.png)
 
 ---
 
