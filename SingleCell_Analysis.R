@@ -189,3 +189,36 @@ DimPlot(PanIslets_Nicola, reduction = "pca")
 # Determine the 'dimensionality' of the dataset
 # The ElbowPlot helps to decide how many PCs to include in downstream analyses (like clustering)
 ElbowPlot(PanIslets_Nicola, ndims = 25)
+
+################# CLUSTERING & DIMENSIONALITY REDUCTION ########################
+# The professor requested testing at least two different combinations of PCs and resolutions. 
+# We will create two different versions, keeping the original PanIslets_Nicola object intact.
+
+# -- Version 1: 15 PCs and Resolution 0.5 --
+# Using fewer PCs and lower resolution generally results in fewer, broader clusters 
+PanIslets_15PC <- FindNeighbors(PanIslets_Nicola, dims = 1:15)
+PanIslets_15PC <- FindClusters(PanIslets_15PC, resolution = 0.5)
+
+# Run UMAP and t-SNE for Version 1
+PanIslets_15PC <- RunUMAP(PanIslets_15PC, dims = 1:15)
+PanIslets_15PC <- RunTSNE(PanIslets_15PC, dims=1:15) 
+
+# -- Version 2: 20 PCs and Resolution 0.8 --
+# Using more PCs and higher resolution forces the algorithm to find more, specific clusters
+PanIslets_20PC <- FindNeighbors(PanIslets_Nicola, dims = 1:20)
+PanIslets_20PC <- FindClusters(PanIslets_20PC, resolution = 0.8)
+
+# Run UMAP and t-SNE for Version 2
+PanIslets_20PC <- RunUMAP(PanIslets_20PC, dims = 1:20)
+PanIslets_20PC <- RunUMAP(PanIslets_20PC, dims = 1:20)
+
+# Plot results
+plot_umap_15 <- DimPlot(PanIslets_15PC, reduction = "umap", label = TRUE) + ggtitle("UMAP: 15 PCs, Res 0.5")  # label clusters
+plot_umap_20 <- DimPlot(PanIslets_20PC, reduction = "umap", label = TRUE) + ggtitle("UMAP: 20 PCs, Res 0.8")
+
+# Display the comparision 
+plot_umap_15 + plot_umap_20
+
+# Check the exact number of clusters generated in each version
+cat("Number of clusters (15 PCs, Res 0.5):", lenght(levels(Idents(PanIslets_15PC))), "\n")
+cat("Number of clusters (20 PCs, Res 0.8):", lenght(levels(Idents(PanIslets_20PC))), "\n")
