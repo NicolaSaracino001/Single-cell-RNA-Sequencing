@@ -224,7 +224,6 @@ cat("Number of clusters (15 PCs, Res 0.5):", lenght(levels(Idents(PanIslets_15PC
 cat("Number of clusters (20 PCs, Res 0.8):", lenght(levels(Idents(PanIslets_20PC))), "\n")
 
 #################### FINDING MARKER GENES ############################
-
 # Set the chosen model as our final object
 
 # Be sure we are working with the correct model (15PC)
@@ -266,3 +265,33 @@ FeaturePlot(PanIslets_Final, features = c("INS", "GCG", "SST", "PPY", "KRT19", "
 
 # ViolinPlot key gene (e.g. Insulina)
 VlnPlot(PanIslets_Final, features = "INS")
+
+####################### CELL TYPE ANNOTATION ##########################
+# Create a vector matching the cluster numbers to their biological names
+
+new.cluster.ids <- c(
+  "0" = "Beta cells",
+  "1" = "Ductal cells",
+  "2" = "Alpha cells",
+  "3" = "Beta cells",
+  "4" = "Ductal cells",
+  "5" = "Acinar cells",      # Typical marker: CELA3A/B
+  "6" = "Delta cells",
+  "7" = "Stellate cells",    # Typical marker: COL1A1, VIM
+  "8" = "Unknown_8",
+  "9" = "Unknown_9",
+  "10" = "Unknown_10",
+  "11" = "Endothelial cells",    # Typical marker: PECAM1
+  "12" = "Unknown_12"
+)
+
+# Ensure the names match the current identity levels of the Seurat object
+names(new.cluster.ids) <- levels(PanIslets_Final)
+
+# Rename the identities in the object
+PanIslets_Final <- RenameIdents(PanIslets_Final, new.cluster.ids)
+
+# Plot the final annotated UMAP
+DimPlot(PanIslets_Final, reduction = "umap", label = TRUE, label.size = 4, pt.size = 0.5) + 
+  ggtitle("Annotated UMAP of Human Pancreatic Islets") +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
