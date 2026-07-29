@@ -223,6 +223,14 @@ plot_umap_15 + plot_umap_20
 cat("Number of clusters (15 PCs, Res 0.5):", length(levels(Idents(PanIslets_15PC))), "\n")
 cat("Number of clusters (20 PCs, Res 0.8):", length(levels(Idents(PanIslets_20PC))), "\n")
 
+# Print the table of 15PC
+table(Idents(PanIslets_15PC))
+# Print the table of 20PC
+table(Idents(PanIslets_20PC))
+
+# Sum table 15PC and 20PC, must be 6060 total cells
+sum(table(Idents(PanIslets_Nicola)))
+
 #################### FINDING MARKER GENES ############################
 # Set the chosen model as our final object
 
