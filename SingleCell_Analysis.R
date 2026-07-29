@@ -220,8 +220,8 @@ plot_umap_20 <- DimPlot(PanIslets_20PC, reduction = "umap", label = TRUE) + ggti
 plot_umap_15 + plot_umap_20
 
 # Check the exact number of clusters generated in each version
-cat("Number of clusters (15 PCs, Res 0.5):", lenght(levels(Idents(PanIslets_15PC))), "\n")
-cat("Number of clusters (20 PCs, Res 0.8):", lenght(levels(Idents(PanIslets_20PC))), "\n")
+cat("Number of clusters (15 PCs, Res 0.5):", length(levels(Idents(PanIslets_15PC))), "\n")
+cat("Number of clusters (20 PCs, Res 0.8):", length(levels(Idents(PanIslets_20PC))), "\n")
 
 #################### FINDING MARKER GENES ############################
 # Set the chosen model as our final object
