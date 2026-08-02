@@ -210,7 +210,7 @@ PanIslets_20PC <- FindClusters(PanIslets_20PC, resolution = 0.8)
 
 # Run UMAP and t-SNE for Version 2
 PanIslets_20PC <- RunUMAP(PanIslets_20PC, dims = 1:20)
-PanIslets_20PC <- RunUMAP(PanIslets_20PC, dims = 1:20)
+PanIslets_20PC <- RunTSNE(PanIslets_20PC, dims = 1:20)
 
 # Plot results
 plot_umap_15 <- DimPlot(PanIslets_15PC, reduction = "umap", label = TRUE) + ggtitle("UMAP: 15 PCs, Res 0.5")  # label clusters
